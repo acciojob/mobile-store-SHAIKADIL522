@@ -20,14 +20,21 @@ const AdminPanel = ({ products, onAdd, onDelete }) => {
         <input className="form-control" name="description" placeholder="Description" value={form.description} onChange={change} />
         <input className="form-control" name="image" placeholder="Image URL" value={form.image} onChange={change} />
         <input className="form-control" type="number" name="price" placeholder="Price" value={form.price} onChange={change} />
-        <button onClick={add}>Add</button>
+        <button type="button" onClick={add}>Add</button>
       </div>
 
-      <ul className="list">
+      <ul className="list list-group">
         {products.map((p) => (
-          <li key={p.id}>
-            <span><Link to={`/products/${p.id}`}>{p.name}</Link></span>
-            <button className="float-right del" onClick={() => onDelete(p.id)}>Delete</button>
+          <li key={p.id} className="list-group-item">
+            <Link to={`/products/${p.id}`}>{p.name}</Link>
+            <span
+              role="button"
+              tabIndex={0}
+              className="float-right del"
+              onClick={() => onDelete(p.id)}
+            >
+              Delete
+            </span>
           </li>
         ))}
       </ul>
