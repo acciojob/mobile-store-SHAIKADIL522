@@ -31,7 +31,7 @@ const App = () => {
       <BrowserRouter>
         <div className="navbar">
           <div><Link to="/">Home</Link></div>
-          <div><Link to="/admin">Admin</Link></div>
+          <div><Link to="/admin">Admin Panel</Link></div>
         </div>
         <div className="content">
           <Routes>

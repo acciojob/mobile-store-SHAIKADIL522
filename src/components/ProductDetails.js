@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 
 const ProductDetails = ({ products, onUpdate }) => {
@@ -7,10 +7,20 @@ const ProductDetails = ({ products, onUpdate }) => {
   const product = products.find((p) => String(p.id) === id);
   const [form, setForm] = useState(product || {});
 
+  // reset form when route id changes
+  useEffect(() => {
+    if (product) setForm(product);
+  }, [id]);
+
   if (!product) return <div>Product not found</div>;
 
   const change = (e) => setForm({ ...form, [e.target.name]: e.target.value });
-  const save = () => onUpdate({ ...product, ...form, price: Number(form.price) });
+
+  const save = () => {
+    const price = Number(form.price);
+    if (form.price === "" || Number.isNaN(price)) return;
+    onUpdate({ ...product, ...form, price });
+  };
 
   return (
     <div className="details">
