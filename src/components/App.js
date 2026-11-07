@@ -1,9 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
 import "./../styles/App.css";
 import ProductList from "./ProductList";
 import ProductDetails from "./ProductDetails";
 import AdminPanel from "./AdminPanel";
+
+const STORAGE_KEY = "mobile-store-products";
 
 const initialProducts = [
   { id: 1, name: "Samsung Galaxy S8 64GB Red", price: 16303, description: "5.8 inch display, 64GB storage", image: "https://via.placeholder.com/80x120?text=S8" },
@@ -16,8 +18,23 @@ const initialProducts = [
   { id: 8, name: "Samsung Galaxy A50 64GB Blue", price: 19999, description: "6.4 inch display, triple camera", image: "https://via.placeholder.com/80x120?text=A50" },
 ];
 
+const load = () => {
+  try {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    return saved ? JSON.parse(saved) : initialProducts;
+  } catch (e) {
+    return initialProducts;
+  }
+};
+
 const App = () => {
-  const [products, setProducts] = useState(initialProducts);
+  const [products, setProducts] = useState(load);
+
+  useEffect(() => {
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(products));
+    } catch (e) {}
+  }, [products]);
 
   const addProduct = (p) => setProducts((prev) => [...prev, p]);
   const updateProduct = (p) =>
