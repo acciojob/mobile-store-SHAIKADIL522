@@ -5,11 +5,11 @@ const ProductDetails = ({ products, onUpdate }) => {
   const { id } = useParams();
   const navigate = useNavigate();
   const product = products.find((p) => String(p.id) === id);
-  const [form, setForm] = useState(product || {});
+  // price input starts empty, so typing sets the new price directly
+  const [form, setForm] = useState({ ...product, price: "" });
 
-  // reset form when route id changes
   useEffect(() => {
-    if (product) setForm(product);
+    if (product) setForm({ ...product, price: "" });
   }, [id]);
 
   if (!product) return <div>Product not found</div>;
@@ -17,9 +17,10 @@ const ProductDetails = ({ products, onUpdate }) => {
   const change = (e) => setForm({ ...form, [e.target.name]: e.target.value });
 
   const save = () => {
-    const price = Number(form.price);
-    if (form.price === "" || Number.isNaN(price)) return;
+    const price = form.price === "" ? product.price : Number(form.price);
+    if (Number.isNaN(price)) return;
     onUpdate({ ...product, ...form, price });
+    setForm((f) => ({ ...f, price: "" }));
   };
 
   return (
@@ -43,7 +44,14 @@ const ProductDetails = ({ products, onUpdate }) => {
           <input className="form-input" name="image" value={form.image || ""} onChange={change} />
         </label>
         <label>Price
-          <input className="form-control" type="number" name="price" value={form.price ?? ""} onChange={change} />
+          <input
+            className="form-control"
+            type="number"
+            name="price"
+            placeholder={`Current: ${product.price}`}
+            value={form.price}
+            onChange={change}
+          />
         </label>
       </div>
       <div>
